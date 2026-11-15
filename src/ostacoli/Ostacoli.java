@@ -36,7 +36,10 @@ public class Ostacoli {
      *           esplosione a catena, non viene colpito di nuovo.
      */
     public void colpisciAttorno(Rettangolo zona) {
-        // scrivete qui
+        if(zona == null) throw new IllegalArgumentException("Zona non può essere null");
+        for (Ostacolo o : ostacoli) {
+            if(o.getArea().tocca(zona) && !o.isRotto()) o.colpisci(this);
+        }
     }
 
     /** Un passo del gioco per tutti gli ostacoli: quelli che si muovono si spostano. */

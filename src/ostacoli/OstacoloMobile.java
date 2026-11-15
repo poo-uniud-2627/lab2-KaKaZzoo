@@ -18,6 +18,10 @@ public class OstacoloMobile implements Ostacolo {
 
     private Rettangolo area;   // non è final: l'ostacolo si muove
     // scrivete qui gli altri campi che vi servono
+    private final double velocita;
+    private final double limiteBasso;
+    private final double limiteAlto;
+    private boolean versoIlBasso;
 
     /**
      * Pretende: area non è null; velocita è maggiore di 0; l'area sta fra i due limiti
@@ -25,7 +29,15 @@ public class OstacoloMobile implements Ostacolo {
      * Promette: un ostacolo che sta in area e che, al primo avanza, comincia a scendere.
      */
     public OstacoloMobile(Rettangolo area, double velocita, double limiteAlto, double limiteBasso) {
+        if (area == null) throw new IllegalArgumentException("L'area non può essere null");
+        if (area.y() < limiteAlto || area.y() + area.altezza() > limiteBasso) throw new IllegalArgumentException("L'area è fuori dai limiti!"); 
+        if(velocita <= 0) throw new IllegalArgumentException("La velocità deve essere maggiore di 0");
+
         this.area = area;
+        this.velocita = velocita;
+        this.limiteAlto = limiteAlto;
+        this.limiteBasso = limiteBasso;
+        this.versoIlBasso = true;
         // scrivete qui
     }
 
@@ -46,7 +58,7 @@ public class OstacoloMobile implements Ostacolo {
     /** Promette: COLORE. */
     @Override
     public Color getColore() {
-        return null; // scrivete qui
+        return COLORE; // scrivete qui
     }
 
     /**
@@ -59,5 +71,20 @@ public class OstacoloMobile implements Ostacolo {
     @Override
     public void avanza() {
         // scrivete qui
+        if(versoIlBasso){
+            double nuovaY = area.y() + velocita;
+            if(nuovaY + area.altezza() >= limiteBasso){
+                nuovaY = limiteBasso - area.altezza();
+                versoIlBasso = false;
+            }
+            area = new Rettangolo(area.x(), nuovaY, area.larghezza(), area.altezza());
+        } else {
+            double nuovaY = area.y() - velocita;
+            if(nuovaY <= limiteAlto){
+                nuovaY = limiteAlto;
+                versoIlBasso = true;
+            }
+            area = new Rettangolo(area.x(), nuovaY, area.larghezza(), area.altezza());
+        }
     }
 }

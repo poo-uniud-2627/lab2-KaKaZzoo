@@ -23,10 +23,13 @@ public class OstacoloEsplosivo implements Ostacolo {
 
     private final Rettangolo area;
     // scrivete qui gli altri campi che vi servono
+    private boolean colpito;
 
     /** Pretende: area non è null. Promette: un ostacolo esplosivo non rotto. */
     public OstacoloEsplosivo(Rettangolo area) {
+        if (area == null) throw new IllegalArgumentException("L'area non può essere null");
         this.area = area;
+        this.colpito = false;
     }
 
     @Override
@@ -39,17 +42,20 @@ public class OstacoloEsplosivo implements Ostacolo {
     @Override
     public void colpisci(Ostacoli campo) {
         // scrivete qui
+        if(isRotto() == true) throw new IllegalStateException("l'ostacolo e' gia' rotto");
+        colpito = true;
+        campo.colpisciAttorno(area.allargato(PORTATA));
     }
 
     @Override
     public boolean isRotto() {
-        return false; // scrivete qui
+        return colpito; // scrivete qui
     }
 
     /** Promette: COLORE, anche da rotto. */
     @Override
     public Color getColore() {
-        return null; // scrivete qui
+        return COLORE; // scrivete qui
     }
 
     @Override
